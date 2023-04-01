@@ -1,6 +1,20 @@
 from django.db import models
 
 
+director = 'DI'
+admin = 'AD'
+cook = 'CO'
+cashier = 'CA'
+cleaner = 'CL'
+
+POSITIONS = [
+    (director, 'Директор'),
+    (admin, 'Админ'),
+    (cook, 'Повар'),
+    (cashier, 'Кассир'),
+    (cleaner, 'Уборщик')
+]
+
 class Order(models.Model):
     pass
 
@@ -18,7 +32,11 @@ class Product(models.Model):
 
 
 class Staff(models.Model):
-    pass
+    full_name = models.CharField(max_length=255)
+    position = models.CharField(max_length=2,
+                                choices=POSITIONS,
+                                default=cashier)
+    labor_contract = models.IntegerField()
 
 
 class ProductOrder(models.Model):
