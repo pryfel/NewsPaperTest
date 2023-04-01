@@ -1,6 +1,22 @@
-from django.db import models
 from datetime import datetime
-from resources import POSITIONS, cashier
+
+from django.db import models
+# from resources import POSITIONS, cashier
+
+
+director = 'DI'
+admin = 'AD'
+cook = 'CO'
+cashier = 'CA'
+cleaner = 'CL'
+
+POSITIONS = [
+    (director, 'Директор'),
+    (admin, 'Админ'),
+    (cook, 'Повар'),
+    (cashier, 'Кассир'),
+    (cleaner, 'Уборщик')
+]
 
 
 class Product(models.Model):
@@ -9,6 +25,12 @@ class Product(models.Model):
 
 
 class Staff(models.Model):
+    director = 'DI'
+    admin = 'AD'
+    cook = 'CO'
+    cashier = 'CA'
+    cleaner = 'CL'
+
     full_name = models.CharField(max_length=255)
     position = models.CharField(max_length=2,
                                 choices=POSITIONS,
@@ -41,7 +63,7 @@ class Order(models.Model):
 
 
 class ProductOrder(models.Model):
-    _amount = models.IntegerField(default=1)
+    _amount = models.IntegerField(default=1, db_column='amount')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
@@ -57,3 +79,5 @@ class ProductOrder(models.Model):
     def amount(self, value):
         self._amount = int(value) if value >= 0 else 0
         self.save()
+
+
