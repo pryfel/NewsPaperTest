@@ -1,28 +1,6 @@
 from django.db import models
 from datetime import datetime
-
-
-director = 'DI'
-admin = 'AD'
-cook = 'CO'
-cashier = 'CA'
-cleaner = 'CL'
-
-POSITIONS = [
-    (director, 'Директор'),
-    (admin, 'Админ'),
-    (cook, 'Повар'),
-    (cashier, 'Кассир'),
-    (cleaner, 'Уборщик')
-]
-
-
-# CREATE TABLE PRODUCTS(
-# 	product_id INT AUTO_INCREMENT NOT NULL,
-# 	name CHAR(255) NOT NULL,
-# 	price FLOAT NOT NULL,
-# 	PRIMARY KEY (product_id)
-# );
+from resources import POSITIONS, cashier
 
 
 class Product(models.Model):
@@ -63,10 +41,19 @@ class Order(models.Model):
 
 
 class ProductOrder(models.Model):
-    amount = models.IntegerField(default=1)
+    _amount = models.IntegerField(default=1)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
     def product_sum(self):
         product_price = self.product.price
-        return product_price * self.amount
+        return product_price * self._amount
+
+    @property
+    def amount(self):
+        return self._amount
+
+    @amount.setter
+    def amount(self, value):
+        self._amount = int(value) if value >= 0 else 0
+        self.save()
